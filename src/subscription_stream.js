@@ -87,6 +87,9 @@ class SubscriptionStream extends Transform {
   }
 
   ack(endLsn) {
+    if (endLsn <= this.lastLsn) {
+      return;
+    }
     this._log('[SubStream] Sending ack');
     this._sendStatus(endLsn + 1n);
   }
