@@ -61,16 +61,19 @@ class Listener {
         write: (chunk, encoding, cb) => {
           curBlock.add(chunk);
 
+          // we are still reading in the entries
           if (!curBlock.complete) {
             cb();
             return;
           }
 
-          // maybe send feedback here
-          this._callback(curBlock, cb);
-          // on the callback success, create a new block and commit that you have used
-          // the changes
-          curBlock = new Block();
+          const next = () => {
+            subStream.ack(curBlock.endLsn);
+            curBlock = new Block();
+            cb();
+          };
+
+          this._callback(curBlock, next);
         },
       }),
     );
