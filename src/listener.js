@@ -53,6 +53,8 @@ class Listener {
 
     let curBlock = new Block();
 
+    const ack = lsn => subStream.ack(lsn);
+
     await pipeline(
       subStream,
       parser,
@@ -68,12 +70,11 @@ class Listener {
           }
 
           const next = () => {
-            subStream.ack(curBlock.endLsn);
             curBlock = new Block();
             cb();
           };
 
-          this._callback(curBlock, next);
+          this._callback(curBlock, next, ack);
         },
       }),
     );

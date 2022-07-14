@@ -23,13 +23,23 @@ const opts = {
 
 const client = new Listener(opts);
 
-client.listen(async (block, next) => {
+let blocks = [];
+
+client.listen(async (block, next, ack) => {
   console.log('=============');
   console.log(block.xid);
 
-  await prompt('acknowledge?');
+  blocks.push(block);
 
-  console.log(strikeThru(block.xid));
+  const message = await prompt('acknowledge?');
+
+  if (message.toLowerCase().startsWith('n')) {
+    console.log(`We now have '${blocks.length}' outstanding blocks`);
+  } else {
+    ack(block.endLsn);
+    console.log(blocks.map(b => strikeThru(b.xid)));
+    blocks = [];
+  }
 
   next();
 });
