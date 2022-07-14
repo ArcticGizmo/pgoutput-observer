@@ -48,16 +48,18 @@ class SubscriptionStream extends Transform {
     this.copyBoth.on('error', e => this.emit('error', e));
 
     this.interval = setInterval(() => {
-      this.sendFeedback();
+      // this.sendFeedback();
     }, feedbackInterval);
 
     this.on('end', () => {
-      clearInterval(this.interval);
+      // clearInterval(this.interval);
       this.copyBoth.end();
     });
   }
 
   sendFeedback(force) {
+    return;
+
     if (this.flushWrittenLsn === INVALID_LSN) {
       return;
     }
@@ -69,6 +71,8 @@ class SubscriptionStream extends Transform {
       console.log('[SubStream] Sending feedback');
       this.lastFeedbackTime = currentTime;
       const resp = new DataView(new ArrayBuffer(1 + 8 + 8 + 8 + 8 + 1));
+      console.log(this.outputWrittenLsn);
+      console.log(this.flushWrittenLsn);
       resp.setUint8(0, 'r'.charCodeAt(0));
       resp.setBigUint64(1, this.outputWrittenLsn);
       resp.setBigUint64(1 + 8, this.flushWrittenLsn);
@@ -78,6 +82,12 @@ class SubscriptionStream extends Transform {
       this.copyBoth.write(Buffer.from(resp.buffer));
     }
   }
+
+  // ping() {
+  //   const resp = new DataView(new ArrayBuffer(1 + 8 + 8 + 1));
+  //   resp.setUint8(0, 'k'.charCodeAt(0));
+  //   resp.setBigUint64(1, )
+  // }
 
   _transform(chunk, encoding, callback) {
     const { autoConfirmLSN = true } = this.options;

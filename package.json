@@ -13,6 +13,7 @@
   "dependencies": {
     "net": "^1.0.2",
     "pg": "^8.7.3",
-    "pg-copy-streams": "^6.0.2"
+    "pg-copy-streams": "^6.0.2",
+    "pg-subscription-stream": "^1.0.5"
   }
 }

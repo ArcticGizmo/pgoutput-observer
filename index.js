@@ -1,8 +1,8 @@
-const Listener = require("./src/listener");
+const Listener = require('./src/listener');
 
-const CONNECTION_STRING = "postgresql://postgres@localhost:5432/dev";
-const SLOT_NAME = "my_slot";
-const PUBLICATION_NAME = "my_publication";
+const CONNECTION_STRING = 'postgresql://postgres@localhost:5432/dev';
+const SLOT_NAME = 'my_slot';
+const PUBLICATION_NAME = 'my_publication';
 
 const opts = {
   connectionString: CONNECTION_STRING,
@@ -10,9 +10,13 @@ const opts = {
   publication: PUBLICATION_NAME,
 };
 
-const Client = new Listener(opts);
+let once = true;
 
-async function start() {}
+const client = new Listener(opts);
 
-require("net").createServer().listen();
-start();
+client.listen((block, complete) => {
+  console.log('=============');
+  console.log(block);
+});
+
+require('net').createServer().listen();

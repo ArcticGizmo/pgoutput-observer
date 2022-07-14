@@ -1,7 +1,9 @@
 const { Client, types } = require('pg');
 const pipeline = require('util').promisify(require('stream').pipeline);
 const SubscriptionStream = require('./subscription_stream');
+const { PgOutputParser } = require('pg-subscription-stream');
 const { Writable } = require('stream');
+const Block = require('./block');
 
 class Listener {
   constructor(options) {
@@ -12,8 +14,11 @@ class Listener {
     });
     this._slot = opts.slot;
     this._publication = opts.publication;
+  }
 
-    this._connect();
+  async listen(callback) {
+    this._callback = callback;
+    await this._connect();
   }
 
   async _connect() {
@@ -33,17 +38,39 @@ class Listener {
       }),
     );
 
+    const parser = new PgOutputParser({
+      typeParsers: types,
+      includeLsn: true,
+      includeTransactionLsn: true,
+      includeXids: true,
+      includeTimestamp: true,
+    });
+
+    if (typeof this._callback !== 'function') {
+      console.error('[Listener] no callback provided, cannot run');
+      throw 'No callback provided';
+    }
+
+    let curBlock = new Block();
+
     await pipeline(
       subStream,
-      // parser,
+      parser,
       new Writable({
         objectMode: true,
         write: (chunk, encoding, cb) => {
-          // const { kind, schema, table, KEY, OLD, NEW } = chunk;
-          // Write to your desintation, do your stuff...
-          console.log('-------------');
-          console.log(chunk);
-          cb();
+          curBlock.add(chunk);
+
+          if (!curBlock.complete) {
+            cb();
+            return;
+          }
+
+          // maybe send feedback here
+          this._callback(curBlock, cb);
+          // on the callback success, create a new block and commit that you have used
+          // the changes
+          curBlock = new Block();
         },
       }),
     );

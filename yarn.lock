@@ -27,6 +27,13 @@ pg-connection-string@^2.5.0:
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.5.0.tgz#538cadd0f7e603fc09a12590f3b8a452c2c0cf34"
   integrity sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==
 
+pg-copy-streams@^5.1.0:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/pg-copy-streams/-/pg-copy-streams-5.1.1.tgz#012f48c332cc31490aa0b5330bc571795963230f"
+  integrity sha512-ieW6JuiIo/4WQ7n+Wevr9zYvpM1AwUs6EwNCCA0VgKZ6ZQ7Y9k3IW00vqc6svX9FtENhbaTbLN7MxekraCrbfg==
+  dependencies:
+    obuf "^1.1.2"
+
 pg-copy-streams@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/pg-copy-streams/-/pg-copy-streams-6.0.2.tgz#4b9285e48937f2d0c14c33413b128485f565c9c8"
@@ -48,6 +55,13 @@ pg-protocol@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/pg-protocol/-/pg-protocol-1.5.0.tgz#b5dd452257314565e2d54ab3c132adc46565a6a0"
   integrity sha512-muRttij7H8TqRNu/DxrAJQITO4Ac7RmX3Klyr/9mJEOBeIpgnF8f9jAfRz5d3XwQZl5qBjF9gLsUtMPJE0vezQ==
+
+pg-subscription-stream@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/pg-subscription-stream/-/pg-subscription-stream-1.0.5.tgz#776c999f36cf5f39960025320e87292b00d17714"
+  integrity sha512-dio9kOj3eA72SBcEUvi3Y2a1jnYtcWcEzcyrOMYCsn4Aftqn33V3TaSe0UDVcbKpH+rnqS4mgOWNL0Ea7nim5Q==
+  dependencies:
+    pg-copy-streams "^5.1.0"
 
 pg-types@^2.1.0:
   version "2.2.0"
